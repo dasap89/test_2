@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% if title %}
+    <title>{{ title }} - microblog</title>
+    {% else %}
+    <title>List of Notes</title>
+    {% endif %}
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <script src="/static/js/jquery.latest.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="span12">
+      <div class="well">
+          <h1>Add new note</h1>
+            <form class="form-horizontal" action="" method="post" name="add_note">
+              
+              {{form.hidden_tag()}}
+              <div class="control-group{% if form.new_note.errors %} error{% endif %}">
+                <label class="control-label" for="add_note">Enter your note:</label>
+                  {{form.new_note(size=80, maxlength=255)}}
+                  {% for error in form.errors.new_note %}
+                        <span class="help-inline">[{{ error }}]</span><br>
+                  {% endfor %}
+              </div>
+              </div>
+              <div class="control-group">
+                <div class="controls">
+                    <input class="btn btn-primary" type="submit" value="Add note">
+                </div>
+            </div>
+            </form>
+      
+    
+          <h1>Here comes list of notes</h1>
+          
+          <div>
+              {% for note in notes %}
+                <p>{{loop.index}}. {{ note.notes }}</p>
+              {% endfor %}
+          </div>
+        </div>
+    </div>
+    </div>
+</html>

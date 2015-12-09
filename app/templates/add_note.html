@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% if title %}
+    <title>{{ title }} - microblog</title>
+    {% else %}
+    <title>List of Notes</title>
+    {% endif %}
+  </head>
+  <body>
+<h1>Sign In</h1>
+<form action="" method="post" name="add_note">
+    {{form.hidden_tag()}}
+    <p>
+        Please enter your note:<br>
+        {{form.new_note(size=80)}}<br>
+    </p>
+    <p><input type="submit" value="Add new note"></p>
+</form>
+</body>
+</html>
