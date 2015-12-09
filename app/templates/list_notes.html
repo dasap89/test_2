@@ -34,14 +34,15 @@
                 </div>
             </div>
             </form>
-      
-    
           <h1>Here comes list of notes</h1>
-          
           <div>
-              {% for note in notes %}
-                <p>{{loop.index}}. {{ note.notes }}</p>
-              {% endfor %}
+              {% if notes %}
+                {% for note in notes %}
+                  <p>{{loop.index}}. {{ note.notes }}</p>
+                {% endfor %}
+              {% else %}
+                <p>No notes in database</p>
+              {% endif %}
           </div>
         </div>
     </div>
