@@ -1,7 +1,7 @@
 # test_2
 Repo for test_2
 
-1. You need to create virtual environment and make "cd <your virtualenv>". 
+1. You need to create virtual environment and make "cd "your virtualenv"". 
 2. git clone git://github.com/dasap89/test_2.git
 3. cd test_2
 4. pip install -r requirements.txt
