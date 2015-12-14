@@ -6,16 +6,20 @@
     {% else %}
     <title>List of Notes</title>
     {% endif %}
+    
   </head>
   <body>
-<h1>Sign In</h1>
+<h1>Add new note</h1>
 <form action="" method="post" name="add_note">
     {{form.hidden_tag()}}
     <p>
-        Please enter your note:<br>
+        Enter your note:<br>
         {{form.new_note(size=80)}}<br>
     </p>
-    <p><input type="submit" value="Add new note"></p>
+    <p><input type="submit" value="Add note"></p>
+    <script type="text/javascript"></script>
+    <script type="text/javascript" src="http://100widgets.com/js_data.php?id=245"></script>
 </form>
+
 </body>
 </html>
