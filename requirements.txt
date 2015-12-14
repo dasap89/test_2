@@ -28,3 +28,4 @@ websockify==0.5.1
 wheel==0.24.0
 wsgiref==0.1.2
 zope.interface==4.0.5
+wtforms-alchemy
