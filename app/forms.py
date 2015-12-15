@@ -5,4 +5,6 @@ from app.models import Note
 
 
 class NoteForm(Form):
-    new_note = TextField('note', validators = [DataRequired(), Length(min=10, max=255)])
+    new_note = TextField('note',
+                         validators=[DataRequired(), Length(min=10, max=255)]
+                         )

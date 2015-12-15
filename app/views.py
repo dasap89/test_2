@@ -6,9 +6,9 @@ from app.models import Note
 from app.forms import NoteForm
 
 
-@app.route('/list-notes', methods = ['GET', 'POST'])
+@app.route('/list-notes', methods=['GET', 'POST'])
 def list_notes():
-    
+
     form = NoteForm()
     if form.validate_on_submit():
         add_new_note = Note(notes=form.new_note.data)
@@ -20,7 +20,8 @@ def list_notes():
     notes = Note.query.all()
     return render_template('list_notes.html', form=form, notes=notes)
 
-@app.route('/add-note', methods = ['GET', 'POST'])
+
+@app.route('/add-note', methods=['GET', 'POST'])
 def add_note():
     form = NoteForm()
     if form.validate_on_submit():
@@ -28,4 +29,4 @@ def add_note():
         db.session.add(add_new_note)
         db.session.commit()
         flash('Your post is now live!')
-    return render_template('add_note.html', form=form )
+    return render_template('add_note.html', form=form)
