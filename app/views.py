@@ -40,10 +40,10 @@ def add_note():
 def widget():
     if Note.query.first() is True:
         rand = random.randrange(1, len(Note.query.all()) + 1)
-        row = Note.query.filter(Note.id == rand).first()
+        row = Note.query.filter(Note.id == rand).first().notes
     else:
         row = "No notes in database"
-    widget_source = '''/**/document.write('<div class="random-note" style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; border-radius:4px; background-color:white; border:2px solid #E3E3E3;"> <div class="header" style="background-color: #F5F5F5; padding: 5px; padding-bottom:1px;"><h4 style="margin:0;padding-bottom:3px">Random note is: </h4></div> <div class="body" style="padding: 5px;">''' + row.notes + '''</div></div>');'''  # noqa
+    widget_source = '''/**/document.write('<div class="random-note" style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; border-radius:4px; background-color:white; border:2px solid #E3E3E3;"> <div class="header" style="background-color: #F5F5F5; padding: 5px; padding-bottom:1px;"><h4 style="margin:0;padding-bottom:3px">Random note is: </h4></div> <div class="body" style="padding: 5px;">''' + row + '''</div></div>');'''  # noqa
     return Response(widget_source, mimetype='application/javascript')
 
 
