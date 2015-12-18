@@ -15,25 +15,26 @@
     <div class="container">
       <div class="row">
         <div class="span12">
-      <div class="well">
-          <h1>Add new note</h1>
-            <form class="form-horizontal" action="" method="post" name="add_note">
-              
-              {{form.hidden_tag()}}
-              <div class="control-group{% if form.new_note.errors %} error{% endif %}">
-                <label class="control-label" for="add_note">Enter your note:</label>
-                  {{form.new_note(size=80, maxlength=255)}}
-                  {% for error in form.errors.new_note %}
-                        <span class="help-inline">[{{ error }}]</span><br>
-                  {% endfor %}
-              </div>
-              </div>
-              <div class="control-group">
-                <div class="controls">
-                    <input class="btn btn-primary" type="submit" value="Add note">
+          <div class="well">
+            <h1>Add new note</h1>
+              <form class="form-horizontal" action="" method="post" name="add_note">
+                
+                {{form.hidden_tag()}}
+                <div class="control-group{% if form.new_note.errors %} error{% endif %}">
+                  <label class="control-label" for="add_note">Enter your note:</label>
+                    {{form.new_note(size=80, maxlength=255)}}
+                    {% for error in form.errors.new_note %}
+                          <span class="help-inline">[{{ error }}]</span><br>
+                    {% endfor %}
                 </div>
-            </div>
-            </form>
+        
+                <div class="control-group">
+                  <div class="controls">
+                    <input class="btn btn-primary" type="submit" value="Add note">
+                  </div>
+                </div>
+              </form>
+          </div>
           <h1>Here comes list of notes</h1>
           <div>
               {% if notes %}
