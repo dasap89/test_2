@@ -19,7 +19,6 @@
           <div class="well">
           <h1>Add new note</h1>
           <form class="form-horizontal" action="" method="post" name="add_note">
-                
                 {{form.hidden_tag()}}
                 <div class="control-group{% if form.new_note.errors %} error{% endif %}">
                   <label class="control-label" for="add_note">Enter your note:</label>
@@ -35,26 +34,17 @@
                   </div>
                 </div>
               </form>
-              </div>
-          <!--<form action="" method="post" name="add_note">
-              {{form.hidden_tag()}}
-              <p>
-                  Enter your note:<br>
-                  {{form.new_note(size=80)}}<br>
-              </p>
-              <p><input type="submit" value="Add note"></p>
-          </form>-->
+          </div>
   <div class="row">
-  <div class="span12"><h4>Here comes a html-widget</h4></div>
+    <div class="span12"><h4>Here comes a html-widget</h4></div>
     <div class="span6">
       <p>Link for widget is bellow:</p>
       <textarea style="width: 416px; height: 105px;" rows="5" cols="50" id="codebox">&lt;script src="{{ widget_link }}" type="text/javascript"&gt;&lt;/script&gt;</textarea>
-  
-  </div>
-  <div class="span6">
-    <p>Example of widget</p>
-    <script type="text/javascript" src="widget"></script>
-  </div>
+    </div>
+    <div class="span6">
+      <p>Example of widget</p>
+      <script type="text/javascript" src="widget"></script>
+    </div>
   </div>
   </div>
   </div>
