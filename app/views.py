@@ -8,7 +8,7 @@ from app.models import Note
 from app.forms import NoteForm
 
 
-@app.route('/list-notes', methods=['GET', 'POST'])
+@app.route('/list-notes/', methods=['GET', 'POST'])
 def list_notes():
 
     form = NoteForm()
