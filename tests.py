@@ -6,6 +6,7 @@ from app import app, db
 from config import basedir
 from app.models import Note
 from flask import url_for
+from flask import render_template
 
 
 class TestCase(unittest.TestCase):
@@ -51,6 +52,16 @@ class TestCase(unittest.TestCase):
         response = self.app.get('/list-notes/')
         assert response.status_code == 200, u'Status code is not 200'
         assert note.notes in response.data, u'There is no test entry'
+
+    def test_html_widget(self):
+        response = self.app.get('/add-note')
+        assert response.status_code == 200, u'Status code is not 200'
+        assert '<script type="text/javascript" src="widget"></script>' in response.data
+        response = self.app.get ('/widget')
+        self.assertEqual(response.status_code, 200)
+        assert len(response.data) >= 0, u'Widget page is empty'
+        
+
 
 if __name__ == '__main__':
     unittest.main()
