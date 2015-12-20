@@ -38,7 +38,7 @@ def add_note():
 
 @app.route('/widget')
 def widget():
-    if Note.query.first() is True:
+    if len(Note.query.all()) >= 1:
         rand = random.randrange(1, len(Note.query.all()) + 1)
         row = Note.query.filter(Note.id == rand).first().notes
     else:
