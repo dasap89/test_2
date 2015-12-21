@@ -4,8 +4,31 @@ import random
 from flask import render_template, redirect, url_for, flash, Response, request
 
 from app import app, db
-from app.models import Note
+from app.models import Note, Request_to_App
 from app.forms import NoteForm
+
+
+@app.before_request
+def before_request():
+    # print request.is_xhr
+    request_to_app = Request_to_App(
+        method = request.method,
+        path_info = request.path,
+        server_protocol = request.environ['SERVER_PROTOCOL'],
+        server_address = request.remote_addr,
+        server_port = request.environ['SERVER_PORT']
+        )
+    db.session.add(request_to_app)
+    db.session.commit()
+    
+        # if request.is_ajax() is not True:
+        #    if 'static' not in request.META.get('PATH_INFO'):
+                # StoredRequests(method = request.META.get('REQUEST_METHOD'),
+	        			#   path_info = request.META.get('PATH_INFO'),
+	        			# 	server_protocol = request.META.get('SERVER_PROTOCOL'),
+	        			# 	server_port = request.META.get('SERVER_PORT'),
+	        			# 	remote_address = request.META.get('REMOTE_ADDR')).save()
+    return None
 
 
 @app.route('/list-notes', methods=['GET', 'POST'])
