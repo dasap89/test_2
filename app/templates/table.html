@@ -1,0 +1,9 @@
+{% for req in requests %}
+           <tr>
+                <td>{{ req.request_time }}</td>
+                <td>{{ req.method }}</td>
+                <td>{{ req.path_info }}</td>
+                <td>{{ req.server_protocol }}</td>
+                <td>{{ req.server_address }}:{{ req.server_port }}</td>
+            </tr>
+{% endfor %}
