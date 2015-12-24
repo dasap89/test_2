@@ -1,11 +1,28 @@
 # coding: utf-8
 import os
 import random
-from flask import render_template, redirect, url_for, flash, Response, request
+import datetime
+from flask import render_template, redirect, url_for, Response, request, json
 
 from app import app, db
-from app.models import Note
+from app.models import Note, Request_to_App
 from app.forms import NoteForm
+
+
+@app.before_request
+def before_request():
+    if request.is_xhr is False and '/static/' not in request.path:
+        request_to_app = Request_to_App(
+            request_time=datetime.datetime.now(),
+            method=request.method,
+            path_info=request.path,
+            server_protocol=request.environ['SERVER_PROTOCOL'],
+            server_address=request.remote_addr,
+            server_port=request.environ['SERVER_PORT']
+            )
+        db.session.add(request_to_app)
+        db.session.commit()
+    return None
 
 
 @app.route('/list-notes/', methods=['GET', 'POST'])
@@ -50,3 +67,34 @@ def widget():
 @app.route('/test-widget')
 def test_widget():
     return render_template('test_widget.html')
+
+
+@app.route('/requests/')
+def request_to_app():
+    status = request.args.get('status', '')
+    if status == 'focused':
+        db.session.query(Request_to_App).filter(
+            Request_to_App.viewed == False  # noqa
+            ).update({Request_to_App.viewed: True})
+        db.session.commit()
+    selected_requests = Request_to_App.query.order_by(
+        Request_to_App.request_time.desc()
+        ).limit(10).all()
+    return render_template(
+        'request_to_app.html',
+        selected_requests=selected_requests
+        )
+
+
+@app.route('/requests/table/')
+def table():
+    requests = Request_to_App.query.order_by(
+        Request_to_App.request_time.desc()
+        ).limit(10).all()
+    data = dict(
+        count=Request_to_App.query.filter(
+            Request_to_App.viewed == False  # noqa
+            ).count(),
+        text=render_template('table.html', requests=requests)
+    )
+    return Response(json.dumps(data), content_type='application/json')
