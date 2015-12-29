@@ -56,11 +56,20 @@ class TestCase(unittest.TestCase):
     def test_html_widget(self):
         response = self.app.get('/add-note')
         assert response.status_code == 200, u'Status code is not 200'
-        assert '<script type="text/javascript" src="widget"></script>' in response.data
-        response = self.app.get ('/widget')
+        assert '<script type="text/javascript" src="widget">' in response.data
+        response = self.app.get('/widget')
         self.assertEqual(response.status_code, 200)
         assert len(response.data) >= 0, u'Widget page is empty'
-        
+
+    def test_ajax_form(self):
+        response1 = self.app.get('/list-notes/')
+        assert 'No notes in database' in response1.data
+        response2 = self.app.get('/ajax-form')
+        assert response2.status_code is 200
+        post = self.app.post('/ajax-add', data={'note': 'Some note #1'})
+        self.assertEqual(post.status_code, 200)
+        response3 = self.app.get('/list-notes/')
+        assert 'Some note #1' in response3.data
 
 
 if __name__ == '__main__':

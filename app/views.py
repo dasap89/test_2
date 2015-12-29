@@ -98,3 +98,17 @@ def table():
         text=render_template('table.html', requests=requests)
     )
     return Response(json.dumps(data), content_type='application/json')
+
+
+@app.route('/ajax-form')
+def ajax_form():
+    return render_template('ajax-form.html')
+
+
+@app.route('/ajax-add', methods=['POST'])
+def ajax_add():
+    note = request.form['note']
+    add_new_note = Note(notes=request.form['note'])
+    db.session.add(add_new_note)
+    db.session.commit()
+    return json.dumps({'status': 'OK', 'note': note})
