@@ -71,6 +71,5 @@ class TestCase(unittest.TestCase):
         response3 = self.app.get('/list-notes/')
         assert 'Some note #1' in response3.data
 
-
 if __name__ == '__main__':
     unittest.main()
