@@ -1,13 +1,15 @@
 import datetime
 from app import app, db
+from wtforms import FileField
 
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     notes = db.Column(db.String(255), unique=True)
+    image_path = db.Column(db.String(255))
 
     def __repr__(self):
-        return '<Note %r>' % (self.notes)
+        return '<Note %r %r>' % (self.notes, self.image_path)
 
 
 class Request_to_App(db.Model):

@@ -1,6 +1,7 @@
 #!flask/bin/python
 import os
 import unittest
+import io
 
 from app import app, db
 from config import basedir
@@ -70,6 +71,15 @@ class TestCase(unittest.TestCase):
         self.assertEqual(post.status_code, 200)
         response3 = self.app.get('/list-notes/')
         assert 'Some note #1' in response3.data
+
+    def test_add_note_with_image(self):
+        response = self.app.get('/list-notes/')
+        assert 'No notes in database' in response.data
+        post = self.app.post('/add-note', data=dict(new_note='Some note #1', image=(io.BytesIO(b'this is a test'), 'test.jpeg')), follow_redirects=True)  # noqa
+        self.assertEqual(post.status_code, 200)
+        response = self.app.get('/list-notes/')
+        self.assertTrue('Some note #1' in post.data)
+        self.assertTrue('<img src="/static/uploads/test.jpeg"/>' in post.data)
 
 if __name__ == '__main__':
     unittest.main()

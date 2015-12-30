@@ -2,11 +2,17 @@
 import os
 import random
 import datetime
-from flask import render_template, redirect, url_for, Response, request, json
+from flask import render_template, redirect, url_for
+from flask import Response, request, json, flash
+from werkzeug import secure_filename
 
-from app import app, db
+from app import app, db, ALLOWED_EXTENSIONS
 from app.models import Note, Request_to_App
 from app.forms import NoteForm
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.lower().rsplit('.', 1)[1] in ALLOWED_EXTENSIONS  # noqa
 
 
 @app.before_request
@@ -42,12 +48,21 @@ def list_notes():
 
 @app.route('/add-note', methods=['GET', 'POST'])
 def add_note():
-    form = NoteForm()
+    form = NoteForm(request.form, csrf_enabled=False)
     if form.validate_on_submit():
-        add_new_note = Note(notes=form.new_note.data)
+        note = form.new_note.data
+        image = request.files['image']
+        filename = ''
+        if image and allowed_file(image.filename):
+            filename = secure_filename(image.filename)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        add_new_note = Note(notes=note, image_path=filename)
         db.session.add(add_new_note)
         db.session.commit()
-        flash('Your post is now live!')
+        flash('Your post "%s" is now live!' % note, 'success')
+        return redirect(url_for('list_notes'))
+    if form.errors:
+        flash(form.errors, 'danger')
     widget_link = request.url.replace("add-note", "widget")
     widget_link = widget_link.replace("http", "https")
     return render_template('add_note.html', form=form, widget_link=widget_link)

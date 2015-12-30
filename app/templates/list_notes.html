@@ -31,7 +31,6 @@
           <div class="well">
             <h1>Add new note</h1>
               <form class="form-horizontal" action="" method="post" name="add_note">
-                
                 {{form.hidden_tag()}}
                 <div class="control-group{% if form.new_note.errors %} error{% endif %}">
                   <label class="control-label" for="add_note">Enter your note:</label>
@@ -40,7 +39,6 @@
                           <span class="help-inline">[{{ error }}]</span><br>
                     {% endfor %}
                 </div>
-        
                 <div class="control-group">
                   <div class="controls">
                     <input class="btn btn-primary" type="submit" value="Add note">
@@ -52,7 +50,11 @@
           <div>
               {% if notes %}
                 {% for note in notes %}
-                  <p>{{loop.index}}. {{ note.notes }}</p>
+                  <p>{{loop.index}}. {{ note.notes }}
+                  {% if note.image_path is not none %}
+                    <img src="{{ url_for('static', filename='uploads/' + note.image_path) }}"/>
+                  {% endif %}
+                  </p>
                 {% endfor %}
               {% else %}
                 <p>No notes in database</p>

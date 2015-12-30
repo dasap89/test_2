@@ -31,7 +31,7 @@
         <div class="span12">
           <div class="well">
           <h1>Add new note</h1>
-          <form class="form-horizontal" action="" method="post" name="add_note">
+          <form class="form-horizontal" action="" method="post" name="add_note" role="form" enctype="multipart/form-data">
                 {{form.hidden_tag()}}
                 <div class="control-group{% if form.new_note.errors %} error{% endif %}">
                   <label class="control-label" for="add_note">Enter your note:</label>
@@ -40,7 +40,10 @@
                           <span class="help-inline">[{{ error }}]</span><br>
                     {% endfor %}
                 </div>
-        
+                <div class="control-group">
+                  <label class="control-label" for="add_note">Image for note:</label>
+                    {{ form.image(style="display:inline;") }}
+                </div>
                 <div class="control-group">
                   <div class="controls">
                     <input class="btn btn-primary" type="submit" value="Add note">
