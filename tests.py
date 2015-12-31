@@ -11,7 +11,6 @@ from flask import render_template
 from app.models import Note, Request_to_App
 
 
-
 class TestCase(unittest.TestCase):
 
     def setUp(self):
@@ -90,8 +89,7 @@ class TestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 301)
         response = self.app.get('/requests/table/')
         self.assertEqual(response.status_code, 200)
-    
-    
+
     def test_requests_page_return_only_10_records(self):
         for i in range(0, 20):
             response = self.app.get('/requests')
@@ -101,10 +99,10 @@ class TestCase(unittest.TestCase):
         count = response.data.count('/requests', 0, len(response.data))
         self.assertEqual(count, 10)
 
-
     def test_middleware_doesnt_save_ajax_requests(self):
         self.app.get('/requests',
-                        headers=[('X-Requested-With', 'XMLHttpRequest')])
+                     headers=[('X-Requested-With', 'XMLHttpRequest')]
+                     )
         requsts_stored_in_db = len(Request_to_App.query.all())
         self.assertEquals(requsts_stored_in_db, 0)
 
