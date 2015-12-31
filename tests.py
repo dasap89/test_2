@@ -35,26 +35,18 @@ class TestCase(unittest.TestCase):
         response = self.app.get('/requests')
         self.assertEqual(response.status_code, 301)
         response = self.app.get('/requests/table/')
-        print response
         self.assertEqual(response.status_code, 200)
-        print response.data
-        # self.assertEqual(len(response.context['new_requests']), 10)
     
     
-    def test_requests_page_return_10_records(self):
+    def test_requests_page_return_only_10_records(self):
         for i in range(0, 20):
             response = self.app.get('/requests')
-            print response.data
-            self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context['new_requests']), 10)
-
-    '''def test_if_requests_view_returns_valid_data(self):
-        response = self.app.get('/requests')
-        print response
+            self.assertEqual(response.status_code, 301)
+        response = self.app.get('/requests/table/')
         self.assertEqual(response.status_code, 200)
-        content = response.context['new_requests'][0]
-        data = Requests.objects.first()
-        self.assertEqual(content, data)'''
+        count = response.data.count('/requests', 0, len(response.data))
+        self.assertEqual(count, 10)
+
 
     def test_middleware_doesnt_save_ajax_requests(self):
         self.app.get('/requests',
