@@ -16,5 +16,10 @@ $(document).ready(function(){
       
       var show_requests = function(data){
           var table=$('table#myTable tbody').html(data.text);
-          $('title').html('('+data.count+') Request to App');
+          if (data.count == 0) {
+               $('title').html('Request to App');
+          } else {
+               $('title').html('('+data.count+') Request to App'); 
+          }
+          
       };

@@ -8,6 +8,8 @@ from config import basedir
 from app.models import Note
 from flask import url_for
 from flask import render_template
+from app.models import Note, Request_to_App
+
 
 
 class TestCase(unittest.TestCase):
@@ -80,6 +82,32 @@ class TestCase(unittest.TestCase):
         response = self.app.get('/list-notes/')
         self.assertTrue('Some note #1' in post.data)
         self.assertTrue('<img src="/static/uploads/test.jpeg"/>' in post.data)
+        assert response.status_code == 200, u'Status code is not 200'
+        assert response.data is not None, u'There is no data in response'
+
+    def test_middleware_save_requests(self):
+        response = self.app.get('/requests')
+        self.assertEqual(response.status_code, 301)
+        response = self.app.get('/requests/table/')
+        self.assertEqual(response.status_code, 200)
+    
+    
+    def test_requests_page_return_only_10_records(self):
+        for i in range(0, 20):
+            response = self.app.get('/requests')
+            self.assertEqual(response.status_code, 301)
+        response = self.app.get('/requests/table/')
+        self.assertEqual(response.status_code, 200)
+        count = response.data.count('/requests', 0, len(response.data))
+        self.assertEqual(count, 10)
+
+
+    def test_middleware_doesnt_save_ajax_requests(self):
+        self.app.get('/requests',
+                        headers=[('X-Requested-With', 'XMLHttpRequest')])
+        requsts_stored_in_db = len(Request_to_App.query.all())
+        self.assertEquals(requsts_stored_in_db, 0)
+
 
 if __name__ == '__main__':
     unittest.main()
