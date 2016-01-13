@@ -12,7 +12,7 @@ class Note(db.Model):
         return '<Note %r %r>' % (self.notes, self.image_path)
 
 
-class Request_to_App(db.Model):
+class RequestToApp(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     request_time = db.Column(db.DateTime)
     method = db.Column(db.String(5))
