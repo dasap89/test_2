@@ -65,7 +65,6 @@ def add_note():
         flash(form.errors, 'danger')
     widget_link = request.url.replace("add-note", "widget")
     widget_link = widget_link.replace("http", "https")
-    print widget_link
     return render_template('add_note.html', form=form, widget_link=widget_link)
 
 

@@ -47,10 +47,9 @@ class TestCase(unittest.TestCase):
         assert check_note == note, u'Test note not saved in database'
 
     def test_add_note(self):
-        # client = app.test_client()
-        # with app.test_request_context('/'):
-        #     response = client.get(url_for('list_notes'))
-        post = self.app.post(url_for('list_notes', data={'new_note': 'Some note #1'})
+        client = app.test_client()
+        with app.test_request_context('/'):
+             post = client.post(url_for('list_notes'), data={'new_note': 'Some note #1'})
         self.assertEqual(post.status_code, 200)
         self.assertTrue('Some note #1' in post.data)
 
@@ -58,36 +57,52 @@ class TestCase(unittest.TestCase):
         note = Note(notes="Some note #1")
         db.session.add(note)
         db.session.commit()
-        response = self.app.get('/list-notes/')
+        client = app.test_client()
+        with app.test_request_context('/'):
+            response = client.get(url_for('list_notes'))
         assert response.status_code == 200, u'Status code is not 200'
         assert note.notes in response.data, u'There is no test entry'
 
     def test_html_widget(self):
-        response = self.app.get('/add-note/')
+        client = app.test_client()
+        with app.test_request_context('/'):
+            response = client.get(url_for('add_note'))
         assert response.status_code == 200, u'Status code is not 200'
         assert '<script type="text/javascript" src=' in response.data
-        response = self.app.get('/widget/')
+        with app.test_request_context('/'):
+            response = client.get(url_for('widget'))
         self.assertEqual(response.status_code, 200)
         assert len(response.data) >= 0, u'Widget page is empty'
 
     def test_ajax_form(self):
-        response1 = self.app.get('/list-notes/')
+        client = app.test_client()
+        with app.test_request_context('/'):
+            response1 = client.get(url_for('list_notes'))
         assert 'No notes in database' in response1.data
-        response2 = self.app.get('/ajax-form')
+        with app.test_request_context('/'):
+            response2 = client.get(url_for('ajax_form'))
         assert response2.status_code is 200
-        post = self.app.post('/ajax-add', data={'note': 'Some note #1'})
+        with app.test_request_context('/'):
+            post = client.post(url_for('ajax_add'), data={'note': 'Some note #1'})  # noqa
         self.assertEqual(post.status_code, 200)
-        response3 = self.app.get('/list-notes/')
+        with app.test_request_context('/'):
+            response3 = client.get(url_for('list_notes'))
         assert 'Some note #1' in response3.data
 
     def test_add_note_with_image(self):
-        response = self.app.get('/list-notes/')
-        assert 'No notes in database' in response.data
-        post = self.app.post('/add-note/', data=dict(new_note='Some note #1', image=(io.BytesIO(b'this is a test'), 'test.jpeg')), follow_redirects=True)  # noqa
+        client = app.test_client()
+        with app.test_request_context('/'):
+            response1 = client.get(url_for('list_notes'))
+        assert 'No notes in database' in response1.data
+        with app.test_request_context('/'):
+            post = client.post(url_for('add_note'), data=dict(new_note='Some note #1', image=(io.BytesIO(b'this is a test'), 'test.jpeg')), follow_redirects=True)  # noqa
+        # post = self.app.post('/add-note/', data=dict(new_note='Some note #1', image=(io.BytesIO(b'this is a test'), 'test.jpeg')), follow_redirects=True)  # noqa
         self.assertEqual(post.status_code, 200)
-        response = self.app.get('/list-notes/')
-        self.assertTrue('Some note #1' in post.data)
-        self.assertTrue('<img src="/static/uploads/test.jpeg"/>' in post.data)
+        with app.test_request_context('/'):
+            response = client.get(url_for('list_notes'))
+        
+        self.assertTrue('Some note #1' in response.data)
+        self.assertTrue('<img src="/static/uploads/test.jpeg"/>' in response.data)  # noqa
 
     def test_middleware_save_requests(self):
         client = app.test_client()
