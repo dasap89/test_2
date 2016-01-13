@@ -43,8 +43,7 @@ class TestCase(unittest.TestCase):
         with app.test_request_context('/'):
             response = client.get(url_for('table'))
         self.assertEqual(response.status_code, 200)
-    
-    
+
     def test_requests_page_return_only_10_records(self):
         client = app.test_client()
         for i in range(0, 20):
@@ -57,11 +56,13 @@ class TestCase(unittest.TestCase):
         count = response.data.count('/requests', 0, len(response.data))
         self.assertEqual(count, 10)
 
-
     def test_middleware_doesnt_save_ajax_requests(self):
         client = app.test_client()
         with app.test_request_context('/'):
-                response = client.get(url_for('request_to_app'), headers=[('X-Requested-With', 'XMLHttpRequest')])
+                response = client.get(
+                    url_for('request_to_app'),
+                    headers=[('X-Requested-With', 'XMLHttpRequest')]
+                )
         requsts_stored_in_db = len(RequestToApp.query.all())
         self.assertEquals(requsts_stored_in_db, 0)
 
