@@ -3,7 +3,7 @@ import os
 import random
 import datetime
 from flask import render_template, redirect, url_for
-from flask import Response, request, json, flash
+from flask import Response, request, json, flash, make_response
 from werkzeug import secure_filename
 
 from app import app, db, ALLOWED_EXTENSIONS
@@ -51,16 +51,19 @@ def add_note():
     form = NoteForm(request.form, csrf_enabled=False)
     if form.validate_on_submit():
         note = form.new_note.data
-        image = request.files['image']
-        filename = ''
-        if image and allowed_file(image.filename):
-            filename = secure_filename(image.filename)
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        add_new_note = Note(notes=note, image_path=filename)
-        db.session.add(add_new_note)
-        db.session.commit()
-        flash('Your post "%s" is now live!' % note, 'success')
-        return redirect(url_for('list_notes'))
+        if request.files.get('image') is None:
+            filename = None
+        else:
+            image = request.files['image']
+            filename = ''
+            if image and allowed_file(image.filename):
+                filename = secure_filename(image.filename)
+                image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            add_new_note = Note(notes=note, image_path=filename)
+            db.session.add(add_new_note)
+            db.session.commit()
+            flash('Your post "%s" is now live!' % note, 'success')
+            return redirect(url_for('list_notes'))
     if form.errors:
         flash(form.errors, 'danger')
     widget_link = request.url.replace("add-note", "widget")
@@ -115,15 +118,28 @@ def table():
     return Response(json.dumps(data), content_type='application/json')
 
 
-@app.route('/ajax-form')
+@app.route('/ajax-form', methods=['GET', 'POST'])
 def ajax_form():
-    return render_template('ajax-form.html')
-
-
-@app.route('/ajax-add', methods=['POST'])
-def ajax_add():
-    note = request.form['note']
-    add_new_note = Note(notes=request.form['note'])
-    db.session.add(add_new_note)
-    db.session.commit()
-    return json.dumps({'status': 'OK', 'note': note})
+    form = NoteForm(request.form, csrf_enabled=False)
+    if request.is_xhr and request.method == 'POST':
+        if form.validate_on_submit():
+            note = form.new_note.data
+            if request.files.get('image') is None:
+                filename = None
+            else:
+                image = request.files.get('image')
+                filename = ''
+                if image and allowed_file(image.filename):
+                    filename = secure_filename(image.filename)
+                    image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            add_new_note = Note(notes=note, image_path=filename)
+            response_data = {}
+            try:
+                db.session.add(add_new_note)
+                db.session.commit()
+                response_data['msg'] = u'Record was updated successfully'
+            except:
+                response_data['msg'] = u'Failed to update the record'
+            return Response(json.dumps(response_data), content_type='application/json')
+    
+    return render_template('ajax-form.html', form=form)
