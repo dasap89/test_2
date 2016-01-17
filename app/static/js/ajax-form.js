@@ -1,35 +1,32 @@
 $(document).ready(function() {
-    $("#ajax-form").validate({
-             rules: {
-                         note: {
-                             required: true,
-                             minlength: 10
-                         }
-             }
-         });
-});
+    var options = {
+        beforeSubmit:  validate,
+        success:       showResponse,
+        dataType:  'json'
+    }; 
+ 
+    // bind to the form's submit event 
+    $('#edit-form').submit(function() {
+        $(this).ajaxSubmit(options); 
 
-$(function() {
-    $('button').click(function() {
-        var note = $('#txtNote').val();
-        $("#ajax-form").valid();
-        
-        if ($("#ajax-form").valid() == true) {
-            jQuery("#send-message").prepend('<span>Adding new note, please wait... </span>')
-            
-            $.ajax({
-                    url: '/ajax-add',
-                    data: $('form').serialize(),
-                    type: 'POST',
-                    success: function(response) {
-                        console.log(response);
-                        document.getElementById("send-message").innerHTML = "New note added successfully. You may input new note for adding.";
-                    },
-                    error: function(error) {
-                        console.log(error);
-                        document.getElementById("send-message").innerHTML = "An error has occured during adding new note.";
-                    }
-            });
-        }
+        return false;
     });
-});
+}); 
+
+// pre-submit callback 
+function validate(formData, jqForm, options) { 
+    if (formData[0].value.length == 0) {
+        $("#send-message").text("[This field is required.]");
+        return false;
+    };
+    if (formData[0].value.length < 10) {
+        $("#send-message").text("[Field must be between 10 and 255 characters long.]");
+        return false;
+    };
+}
+
+// post-submit callback 
+function showResponse(responseText, statusText, xhr, $form)  {
+    var respone_msg = $.parseJSON(xhr.responseText);
+    $('#status').html(respone_msg.msg);
+}
