@@ -131,15 +131,21 @@ def ajax_form():
                 filename = ''
                 if image and allowed_file(image.filename):
                     filename = secure_filename(image.filename)
-                    image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    image.save(os.path.join(
+                        app.config['UPLOAD_FOLDER'],
+                        filename
+                    ))
             add_new_note = Note(notes=note, image_path=filename)
             response_data = {}
             try:
                 db.session.add(add_new_note)
                 db.session.commit()
-                response_data['msg'] = u'Record was updated successfully'
+                response_data['msg'] = u'Your note is now live!'
             except:
-                response_data['msg'] = u'Failed to update the record'
-            return Response(json.dumps(response_data), content_type='application/json')
-    
+                response_data['msg'] = u'Failed to add you note.'
+            return Response(
+                json.dumps(response_data),
+                content_type='application/json'
+            )
+
     return render_template('ajax-form.html', form=form)
