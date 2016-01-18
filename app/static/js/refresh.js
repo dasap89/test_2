@@ -1,6 +1,6 @@
 $(document).ready(function(){
       get_requests();
-      window.setInterval(get_requests, 3000);
+      window.setInterval(get_requests, 1000);
       });
 
 

@@ -118,7 +118,7 @@ def table():
     return Response(json.dumps(data), content_type='application/json')
 
 
-@app.route('/ajax-form', methods=['GET', 'POST'])
+@app.route('/ajax-form/', methods=['GET', 'POST'])
 def ajax_form():
     form = NoteForm(request.form, csrf_enabled=False)
     if request.is_xhr and request.method == 'POST':
