@@ -90,7 +90,7 @@ def test_widget():
 @app.route('/requests/')
 def request_to_app():
     status = request.args.get('status', '')
-    if status == 'focused':
+    if status == 'focused' or 'requests' in request.path:
         db.session.query(RequestToApp).filter(
             RequestToApp.viewed == False  # noqa
             ).update({RequestToApp.viewed: True})
